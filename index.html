@@ -24,11 +24,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1000px;
-            overflow-x: hidden; /* Evita scroll horizontal */
+            overflow-x: hidden;
         }
 
-        /* Fondo de Estrellas */
         #starField {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -36,7 +34,16 @@
             background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
         }
 
-        /* Panel de Acceso - ADAPTABLE */
+        /* Canvas para animaciones especiales */
+        #animationCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            display: none; /* Se activa al desbloquear */
+        }
+
         .glass-panel {
             background: var(--glass);
             backdrop-filter: blur(30px);
@@ -47,18 +54,12 @@
             width: 85%;
             max-width: 450px;
             text-align: center;
+            z-index: 10;
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        /* AJUSTE PARA MÓVILES PEQUEÑOS */
         @media (max-width: 480px) {
-            .glass-panel {
-                padding: 30px 20px;
-                border-radius: 30px;
-            }
-            h2 { font-size: 1.5rem; }
-            .lives { font-size: 18px; }
+            .glass-panel { padding: 30px 20px; }
         }
 
         .lives { font-size: 24px; margin-bottom: 20px; letter-spacing: 5px; }
@@ -73,12 +74,9 @@
             border-radius: 18px;
             color: white;
             outline: none;
-            transition: 0.4s;
             box-sizing: border-box;
-            font-size: 16px; /* Evita zoom automático en iPhone */
+            font-size: 16px;
         }
-
-        input:focus { border-color: var(--apple-green); background: rgba(255,255,255,0.1); }
 
         button {
             margin-top: 20px;
@@ -89,14 +87,10 @@
             border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.3s;
-            width: 100%; /* Botón ancho en móviles */
+            width: 100%;
             max-width: 250px;
         }
 
-        button:active { transform: scale(0.95); }
-
-        /* CONTENIDO DESBLOQUEADO (RECUERDOS) */
         #final-screen {
             display: none;
             width: 90%;
@@ -104,6 +98,7 @@
             padding: 60px 0;
             text-align: center;
             opacity: 0;
+            z-index: 5;
         }
 
         .title-main {
@@ -113,7 +108,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
-            padding: 0 10px;
         }
 
         .memory-grid {
@@ -121,14 +115,6 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             margin-top: 40px;
-            padding: 10px;
-        }
-
-        /* Ajuste de grid para pantallas muy pequeñas */
-        @media (max-width: 350px) {
-            .memory-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         .memory-card {
@@ -137,12 +123,9 @@
             border: 1px solid var(--border);
             border-radius: 25px;
             padding: 25px;
-            transition: 0.4s;
             animation: fadeInUp 0.8s ease forwards;
             opacity: 0;
         }
-
-        #youtube-player { display: none; }
 
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -155,41 +138,33 @@
 <body>
 
 <div id="starField"></div>
+<canvas id="animationCanvas"></canvas>
 <div id="youtube-player"></div>
 
-<!-- Pantalla de Inicio -->
 <div class="glass-panel" id="accessPanel">
     <div class="lives" id="heartBox">❤️❤️❤️❤️❤️</div>
     <h2>Space Mission</h2>
-    <div class="riddle-container">
-        <input type="text" id="q1" placeholder="...hijos" autocomplete="off">
-    </div>
-    <div class="riddle-container">
-        <input type="text" id="q2" placeholder="...voces de amor" autocomplete="off">
-    </div>
-    <div class="riddle-container">
-        <input type="text" id="q3" placeholder="Gritan a sol tu voz..." autocomplete="off">
-    </div>
+    <div class="riddle-container"><input type="text" id="q1" placeholder="...hijos" autocomplete="off"></div>
+    <div class="riddle-container"><input type="text" id="q2" placeholder="...voces de amor" autocomplete="off"></div>
+    <div class="riddle-container"><input type="text" id="q3" placeholder="Gritan a sol tu voz..." autocomplete="off"></div>
     <button onclick="checkAnswers()">Verify Identity</button>
 </div>
 
-<!-- Pantalla de Recuerdos -->
 <div id="final-screen">
     <h1 class="title-main">To Infinity and Beyond</h1>
-    <p style="color: var(--apple-green); letter-spacing: 2px; font-size: 0.9rem;">RECUERDOS DESBLOQUEADOS</p>
-
+    <p style="color: var(--apple-green); letter-spacing: 2px;">RECUERDOS DESBLOQUEADOS</p>
     <div class="memory-grid">
         <div class="memory-card" style="animation-delay: 0.2s;">
             <h3>El Primer Momento</h3>
-            <p>Aquí puedes escribir sobre ese instante especial que nunca olvidarán.</p>
+            <p>Aquí puedes escribir sobre ese instante especial.</p>
         </div>
         <div class="memory-card" style="animation-delay: 0.4s;">
             <h3>Nuestra Aventura</h3>
-            <p>Un viaje, una risa o ese día especial donde todo cobró sentido.</p>
+            <p>Un viaje, una risa o ese día en la UNED.</p>
         </div>
         <div class="memory-card" style="animation-delay: 0.6s;">
             <h3>La Promesa</h3>
-            <p>"Al infinito y más allá" no es solo una frase, es nuestro destino.</p>
+            <p>"Al infinito y más allá".</p>
         </div>
     </div>
 </div>
@@ -197,8 +172,10 @@
 <script>
     let lives = 5;
     let player;
+    const canvas = document.getElementById('animationCanvas');
+    const ctx = canvas.getContext('2d');
 
-    // Carga API YouTube
+    // YouTube API
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -206,23 +183,17 @@
 
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('youtube-player', {
-            height: '0',
-            width: '0',
-            videoId: 'WrjF8bZTCZI', 
+            height: '0', width: '0', videoId: 'WrjF8bZTCZI',
             playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': 'WrjF8bZTCZI' }
         });
     }
 
     function checkAnswers() {
-        if (player && typeof player.playVideo === 'function') {
-            player.playVideo();
-        }
-
+        if (player && typeof player.playVideo === 'function') player.playVideo();
         const a1 = document.getElementById('q1').value.toLowerCase().trim();
         const a2 = document.getElementById('q2').value.toLowerCase().trim();
         const a3 = document.getElementById('q3').value.toLowerCase().trim();
 
-        // Respuestas correctas
         if (a1 === "saturno" && (a2 === "pluton" || a2 === "plutón") && (a3 === "la luna" || a3 === "luna")) {
             unlockPage();
         } else {
@@ -233,39 +204,96 @@
     }
 
     function unlockPage() {
-        const panel = document.getElementById('accessPanel');
-        const screen = document.getElementById('final-screen');
-        panel.style.transform = "scale(0.8) translateY(-50px)";
-        panel.style.opacity = "0";
+        document.getElementById('accessPanel').style.opacity = "0";
         setTimeout(() => {
-            panel.classList.add('hidden');
+            document.getElementById('accessPanel').classList.add('hidden');
+            const screen = document.getElementById('final-screen');
             screen.style.display = "block";
-            window.scrollTo(0,0);
+            canvas.style.display = "block";
+            resizeCanvas();
+            startAnimations();
             setTimeout(() => screen.style.opacity = "1", 50);
         }, 800);
     }
 
-    // Generar estrellas adaptadas al tamaño de pantalla
+    // --- ANIMACIONES ESPACIALES ---
+    let rocket = { x: -100, y: 0, speed: 2, angle: -0.5 };
+    let shootingStars = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        rocket.y = canvas.height * 0.7;
+    }
+
+    function createShootingStar() {
+        shootingStars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height / 2,
+            len: Math.random() * 80 + 20,
+            speed: Math.random() * 10 + 5,
+            opacity: 1
+        });
+    }
+
+    function drawRocket() {
+        ctx.save();
+        ctx.translate(rocket.x, rocket.y);
+        ctx.rotate(rocket.angle);
+        // Cuerpo Cohete
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 20, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Punta
+        ctx.fillStyle = '#ff453a';
+        ctx.beginPath();
+        ctx.moveTo(20, 0); ctx.lineTo(10, -8); ctx.lineTo(10, 8);
+        ctx.fill();
+        // Fuego posterior
+        ctx.fillStyle = '#ff9500';
+        ctx.beginPath();
+        ctx.moveTo(-20, 0); ctx.lineTo(-35, Math.random() * 10 - 5); ctx.lineTo(-20, 5);
+        ctx.fill();
+        ctx.restore();
+        
+        rocket.x += rocket.speed;
+        rocket.y -= 0.5; // Sube un poco
+        if (rocket.x > canvas.width + 100) rocket.x = -100;
+    }
+
+    function drawShootingStars() {
+        shootingStars.forEach((s, i) => {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${s.opacity})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(s.x, s.y);
+            ctx.lineTo(s.x - s.len, s.y + s.len * 0.5);
+            ctx.stroke();
+            s.x += s.speed;
+            s.y += s.speed * 0.5;
+            s.opacity -= 0.01;
+            if (s.opacity <= 0) shootingStars.splice(i, 1);
+        });
+        if (Math.random() < 0.02) createShootingStar();
+    }
+
+    function startAnimations() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawShootingStars();
+        drawRocket();
+        requestAnimationFrame(startAnimations);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    // Estrellas fijas de fondo
     const starField = document.getElementById('starField');
-    const starCount = window.innerWidth < 480 ? 80 : 150; // Menos estrellas en móvil para mejor rendimiento
-    for (let i = 0; i < starCount; i++) {
+    for (let i = 0; i < 100; i++) {
         const star = document.createElement('div');
-        star.style.cssText = `
-            position:absolute; 
-            width:${Math.random()*3}px; 
-            height:${Math.random()*3}px; 
-            background:#fff; 
-            left:${Math.random()*100}%; 
-            top:${Math.random()*100}%; 
-            opacity:${Math.random()}; 
-            border-radius:50%;
-        `;
+        star.style.cssText = `position:absolute; width:2px; height:2px; background:#fff; left:${Math.random()*100}%; top:${Math.random()*100}%; opacity:${Math.random()}; border-radius:50%;`;
         starField.appendChild(star);
     }
 </script>
-
-</body>
-</html>
-
 </body>
 </html>
