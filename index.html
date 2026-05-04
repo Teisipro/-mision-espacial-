@@ -3,247 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Para Jocelyn Domínguez López</title>
+    <title>Para mi infinito</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
 
-        :root {
-            --rosa: #ff2d75;
-            --morado: #a259ff;
-            --glass: rgba(255, 255, 255, 0.12);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; }
 
         body, html {
             height: 100vh; width: 100vw;
-            background: #050505; 
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
             color: #fff; font-family: 'Poppins', sans-serif;
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
 
-        /* Lienzo para estrellas y fuegos artificiales */
-        #canvas-bg { 
-            position: fixed; 
-            inset: 0; 
-            z-index: -1; 
-            background: radial-gradient(circle at center, #1b0a2a 0%, #050505 100%);
-        }
+        canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
-        /* Tarjeta de Cristal */
         .glass-card {
-            background: var(--glass);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 30px;
+            border-radius: 25px;
             padding: 2rem;
-            width: 90%; max-width: 450px;
-            text-align: center; z-index: 10;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-            transition: opacity 1s ease;
+            width: 90%; max-width: 420px;
+            text-align: center;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            z-index: 10;
         }
-
-        h2 { font-weight: 300; margin-bottom: 20px; font-size: 1.3rem; }
-        
-        input {
-            width: 100%; background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 15px; border-radius: 15px;
-            color: white; text-align: center; margin-bottom: 20px;
-            font-size: 1rem; outline: none;
-        }
-
-        button {
-            padding: 15px 30px; border-radius: 50px;
-            border: none; font-weight: 700; cursor: pointer;
-        }
-
-        #btn-verify { background: #fff; color: #000; width: 100%; }
-        
-        #final-screen { display: none; flex-direction: column; align-items: center; opacity: 0; }
 
         .romantic-title {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.5rem, 10vw, 3.5rem);
-            color: var(--rosa);
-            text-shadow: 0 0 15px rgba(255, 45, 117, 0.7);
+            font-size: 2.8rem; color: #ff2d75;
+            text-shadow: 0 0 15px rgba(255, 45, 117, 0.6);
+            margin-bottom: 10px;
         }
 
-        .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 25px; width: 100%; position: relative; }
-        #btn-si { background: var(--rosa); color: white; min-width: 110px; z-index: 25; }
-        #btn-no { background: #333; color: white; min-width: 110px; transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); z-index: 20; }
-
-        .poema-box {
-            display: none; text-align: center; margin-top: 20px;
-            line-height: 1.6; font-size: 1rem;
-            animation: fadeIn 2s ease;
+        input {
+            width: 100%; background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 12px; border-radius: 12px;
+            color: white; text-align: center; margin-bottom: 15px; outline: none;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        button {
+            padding: 12px 25px; border-radius: 50px; border: none;
+            font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
 
-        /* Nombres y Frases Flotantes */
+        .btn-si { background: #ff2d75; color: white; min-width: 100px; }
+        .btn-no { background: #6a1b9a; color: white; min-width: 100px; }
+        .btn-next { background: #fff; color: #ff2d75; width: 100%; margin-top: 15px; }
+
         .float-name {
-            position: fixed; pointer-events: none; font-weight: bold;
-            z-index: 100; animation: floatUp 4s linear forwards;
+            position: fixed; pointer-events: none;
+            animation: floatUp 5s linear forwards;
+            font-weight: bold; font-family: 'Dancing Script', cursive;
+            z-index: 5;
         }
 
         @keyframes floatUp {
             0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(-10vh) rotate(20deg); opacity: 0; }
         }
 
-        #te-amo-msg {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-family: 'Dancing Script', cursive; font-size: clamp(2rem, 8vw, 3rem);
-            color: white; text-shadow: 0 0 20px var(--rosa);
-            z-index: 100; pointer-events: none; display: none; text-align: center;
+        .space-obj { position: fixed; font-size: 2rem; z-index: 2; pointer-events: none; transition: all 8s linear; }
+
+        #heart-explosion {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 5rem; z-index: 100;
+            display: none; flex-direction: column; align-items: center;
         }
     </style>
 </head>
 <body>
 
-    <canvas id="canvas-bg"></canvas>
-    <div id="youtube-player" style="display:none"></div>
-    <div id="te-amo-msg">TE AMO JOCELYN</div>
+    <canvas id="space-canvas"></canvas>
+    <div id="youtube-player"></div>
 
-    <!-- ACCESO SEGURIDAD -->
-    <div class="glass-card" id="accessPanel">
-        <h2>Hola, Jocelyn Domínguez López</h2>
-        <p style="margin-bottom: 15px; font-style: italic; opacity: 0.9;">"Al infinito..."</p>
-        <input type="text" id="passphrase" placeholder="Escribe la respuesta aquí" autocomplete="off">
-        <button id="btn-verify" onclick="verificar()">Verificar</button>
+    <div id="heart-explosion">
+        <span>❤️</span>
+        <h2 style="font-family: 'Dancing Script'; color: white; text-shadow: 0 0 10px #ff2d75;">Te amo</h2>
     </div>
 
-    <!-- PANTALLA DE PROPUESTA -->
-    <div class="glass-card" id="final-screen">
+    <!-- 1. ACCESO -->
+    <div class="glass-card" id="panel-acceso">
         <h1 class="romantic-title">Jocelyn</h1>
-        <p id="pregunta">¿Me dejas volver a tu lado?</p>
-        
-        <div class="btn-group" id="btns-container">
-            <button id="btn-si" onclick="aceptar()">SÍ</button>
-            <button id="btn-no" onmouseover="huir(this)" onclick="huir(this)">NO</button>
-        </div>
+        <p style="margin-bottom: 15px; font-size: 0.9rem;">"Al infinito..."</p>
+        <input type="text" id="pass" placeholder="Completa la frase">
+        <button style="background: white; width: 100%;" onclick="verificar()">Entrar</button>
+    </div>
 
-        <div id="poema-container" class="poema-box">
-            <p><b>Mi Jocelyn,</b><br><br>
-            Tú sabes que no te lo iba a poner fácil,<br>
-            porque un amor como el nuestro merece ser luchado.<br>
-            Caminemos juntos de nuevo,<br>
-            al infinito y más allá.</p>
+    <!-- 2. PROPUESTA -->
+    <div class="glass-card" id="panel-propuesta" style="display:none;">
+        <h1 class="romantic-title">¿Me dejas volver?</h1>
+        <p>Tú eres mi infinito.</p>
+        <div class="btn-group" style="display:flex; gap:10px; justify-content: center; margin-top: 20px;">
+            <button class="btn-si" onclick="secuenciaCohete()">SÍ</button>
+            <button class="btn-no" id="btn-no-mov" onmouseover="huir(this)" onclick="final('no_choice')">NO</button>
         </div>
+    </div>
+
+    <!-- 3. POEMA -->
+    <div class="glass-card" id="panel-poema" style="display:none;">
+        <div style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 15px;">
+            <p><b>Hagamos un trato</b><br><br>
+            Usted sabe que puede contar conmigo,<br>
+            no hasta dos o hasta diez,<br> sino contar conmigo.<br><br>
+            <i>— Mario Benedetti</i></p>
+        </div>
+        <button class="btn-next" onclick="irASeleccion()">Siguiente</button>
+    </div>
+
+    <!-- 4. SELECCIÓN FINAL -->
+    <div class="glass-card" id="panel-seleccion" style="display:none;">
+        <h2 class="romantic-title" style="font-size: 1.8rem;">Dime algo...</h2>
+        <div class="btn-group" style="display:flex; flex-direction: column; gap:10px;">
+            <button class="btn-si" onclick="final('si')">¿Por qué elegiste SÍ?</button>
+            <button class="btn-no" onclick="final('no')">¿Por qué elegiste NO?</button>
+        </div>
+    </div>
+
+    <!-- 5. FINAL -->
+    <div class="glass-card" id="panel-final" style="display:none;">
+        <h2 id="final-titulo" class="romantic-title"></h2>
+        <p id="final-texto"></p>
+        <br>
+        <p style="color: #ff2d75; font-weight: bold;">Jocelyn & Teisi</p>
     </div>
 
 <script>
-    const canvas = document.getElementById('canvas-bg');
+    const canvas = document.getElementById('space-canvas');
     const ctx = canvas.getContext('2d');
-    let stars = [];
-    let fireworks = [];
     let player;
 
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    // 1. GENERAR ESTRELLAS BRILLANTES
-    for(let i=0; i<200; i++) {
-        stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2.5 + 0.5,
-            opacity: Math.random(),
-            blink: Math.random() * 0.03 + 0.01
-        });
-    }
-
-    function draw() {
-        // Fondo semi-transparente para rastro de fuegos
-        ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Dibujar Estrellas
-        stars.forEach(s => {
-            ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
-            ctx.fill();
-            s.opacity += s.blink;
-            if(s.opacity > 1 || s.opacity < 0.2) s.blink *= -1;
-        });
-
-        // Dibujar Fuegos Artificiales
-        fireworks.forEach((f, i) => {
-            f.update();
-            f.draw();
-            if (f.done) fireworks.splice(i, 1);
-        });
-
-        requestAnimationFrame(draw);
-    }
-    draw();
-
-    // CLASE PARA CORAZONES PIROTÉCNICOS
-    class Firework {
-        constructor(x, y) {
-            this.x = x;
-            this.y = canvas.height;
-            this.targetY = y;
-            this.speed = 5;
-            this.particles = [];
-            this.done = false;
-            this.exploded = false;
-        }
-        update() {
-            if (!this.exploded) {
-                this.y -= this.speed;
-                if (this.y <= this.targetY) {
-                    this.explode();
-                    this.exploded = true;
-                }
-            }
-            this.particles.forEach((p, i) => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.015; // Gravedad suave
-                p.alpha -= 0.008;
-                if (p.alpha <= 0) this.particles.splice(i, 1);
-            });
-            if (this.exploded && this.particles.length === 0) this.done = true;
-        }
-        explode() {
-            const count = 120;
-            for (let i = 0; i < count; i++) {
-                const angle = (i / count) * Math.PI * 2;
-                // Ecuación matemática del corazón
-                const r = 16;
-                const vx = 16 * Math.pow(Math.sin(angle), 3);
-                const vy = -(13 * Math.cos(angle) - 5 * Math.cos(angle * 2) - 2 * Math.cos(angle * 3) - Math.cos(angle * 4));
-                this.particles.push({
-                    x: this.x, y: this.y, 
-                    vx: vx * 0.18, vy: vy * 0.18,
-                    alpha: 1, 
-                    color: Math.random() > 0.5 ? '#ff2d75' : '#a259ff'
-                });
-            }
-        }
-        draw() {
-            if (!this.exploded) {
-                ctx.fillStyle = '#fff';
-                ctx.beginPath(); ctx.arc(this.x, this.y, 2.5, 0, Math.PI*2); ctx.fill();
-            }
-            this.particles.forEach(p => {
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
-            });
-            ctx.globalAlpha = 1;
-        }
-    }
-
-    // YOUTUBE API
+    // YouTube API
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -256,70 +152,120 @@
         });
     }
 
-    function verificar() {
-        const val = document.getElementById('passphrase').value.toLowerCase().trim();
-        if (player && player.playVideo) player.playVideo();
-        if (val.includes("mas alla") || val.includes("más allá")) {
-            document.getElementById('accessPanel').style.display = 'none';
-            const fs = document.getElementById('final-screen');
-            fs.style.display = 'flex';
-            setTimeout(() => fs.style.opacity = '1', 100);
-        } else {
-            alert("Respuesta incorrecta. Pista: 'Y más...'");
+    function init() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', init);
+    init();
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+        for(let i=0; i<80; i++) {
+            ctx.beginPath();
+            ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*1.2, 0, Math.PI*2);
+            ctx.fill();
         }
     }
+    setInterval(animate, 1500);
 
-    // LÓGICA BOTÓN "NO" REBELDE (No se sale de pantalla)
-    function huir(btn) {
-        const margin = 100;
-        const maxX = window.innerWidth - btn.offsetWidth - margin;
-        const maxY = window.innerHeight - btn.offsetHeight - margin;
-        
-        const newX = Math.max(margin, Math.random() * maxX);
-        const newY = Math.max(margin, Math.random() * maxY);
-        
-        btn.style.position = 'fixed';
-        btn.style.left = newX + 'px';
-        btn.style.top = newY + 'px';
+    function verificar() {
+        const val = document.getElementById('pass').value.toLowerCase();
+        if(val.includes("mas alla") || val.includes("más allá")) {
+            if(player && player.playVideo) player.playVideo();
+            document.getElementById('panel-acceso').style.display = 'none';
+            document.getElementById('panel-propuesta').style.display = 'block';
+            spawnSpaceObjects();
+        } else { alert("Pista: Y..."); }
     }
 
-    // CELEBRACIÓN AL DECIR SÍ
-    function aceptar() {
-        document.getElementById('btns-container').style.display = 'none';
-        document.getElementById('pregunta').style.display = 'none';
-        document.getElementById('poema-container').style.display = 'block';
-        document.getElementById('te-amo-msg').style.display = 'block';
-        
-        // Ciclo de fuegos artificiales
-        setInterval(() => {
-            fireworks.push(new Firework(Math.random() * canvas.width, canvas.height * (0.2 + Math.random() * 0.3)));
-        }, 700);
+    function huir(btn) {
+        const maxX = window.innerWidth - btn.offsetWidth - 40;
+        const maxY = window.innerHeight - btn.offsetHeight - 40;
+        btn.style.position = "fixed";
+        btn.style.left = Math.max(20, Math.random() * maxX) + "px";
+        btn.style.top = Math.max(20, Math.random() * maxY) + "px";
+    }
 
-        // Lluvia de nombres Jocelyn (Rosa) y Teisi (Morado)
+    function spawnSpaceObjects() {
+        const icons = ['🚀', '🛸', '🛰️', '✨'];
         setInterval(() => {
-            const el = document.createElement('div');
-            el.className = 'float-name';
-            const isJocelyn = Math.random() > 0.5;
-            el.innerText = isJocelyn ? 'Jocelyn' : 'Teisi';
-            el.style.color = isJocelyn ? 'var(--rosa)' : 'var(--morado)';
-            el.style.left = Math.random() * 85 + 'vw';
-            el.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 4000);
-        }, 300);
+            const obj = document.createElement('div');
+            obj.className = 'space-obj';
+            obj.innerText = icons[Math.floor(Math.random()*icons.length)];
+            obj.style.left = "-60px";
+            obj.style.top = Math.random() * 80 + "vh";
+            document.body.appendChild(obj);
+            setTimeout(() => { obj.style.left = "110vw"; }, 100);
+            setTimeout(() => obj.remove(), 8100);
+        }, 3000);
+    }
 
-        // Frases de amor aleatorias
-        const frases = ["Mi vida", "Mi amor", "Mi mundo", "Te extrañé"];
+    function secuenciaCohete() {
+        document.getElementById('panel-propuesta').style.display = 'none';
+        const rocket = document.createElement('div');
+        rocket.innerText = "🚀";
+        rocket.style.cssText = "position:fixed; bottom:0; left:50%; font-size:3rem; z-index:99; transition:all 1.2s ease-in; transform:translateX(-50%);";
+        document.body.appendChild(rocket);
+
+        setTimeout(() => { rocket.style.bottom = "50%"; }, 100);
+
+        setTimeout(() => {
+            rocket.remove();
+            const exp = document.getElementById('heart-explosion');
+            exp.style.display = 'flex';
+            setTimeout(() => { exp.style.transform = 'translate(-50%, -50%) scale(1.5)'; }, 50);
+            
+            lluviaNombres();
+
+            setTimeout(() => {
+                exp.style.opacity = '0';
+                setTimeout(() => {
+                    exp.style.display = 'none';
+                    document.getElementById('panel-poema').style.display = 'block';
+                }, 500);
+            }, 2000);
+        }, 1300);
+    }
+
+    function lluviaNombres() {
         setInterval(() => {
-            const f = document.createElement('div');
-            f.className = 'float-name';
-            f.innerText = frases[Math.floor(Math.random() * frases.length)];
-            f.style.color = "#fff";
-            f.style.left = Math.random() * 80 + 'vw';
-            f.style.fontStyle = "italic";
-            document.body.appendChild(f);
-            setTimeout(() => f.remove(), 5000);
-        }, 1500);
+            const isTeisi = Math.random() > 0.5;
+            const name = document.createElement('div');
+            name.className = 'float-name';
+            name.innerText = isTeisi ? 'Teisi' : 'Jocelyn';
+            name.style.color = isTeisi ? '#9c27b0' : '#ff2d75'; 
+            name.style.left = (Math.random() * 80 + 10) + "vw";
+            name.style.fontSize = (Math.random() * 1 + 1.5) + "rem";
+            document.body.appendChild(name);
+            setTimeout(() => name.remove(), 5000);
+        }, 400);
+    }
+
+    function irASeleccion() {
+        document.getElementById('panel-poema').style.display = 'none';
+        document.getElementById('panel-seleccion').style.display = 'block';
+    }
+
+    function final(opcion) {
+        document.getElementById('panel-seleccion').style.display = 'none';
+        document.getElementById('panel-propuesta').style.display = 'none';
+        const pFinal = document.getElementById('panel-final');
+        const titulo = document.getElementById('final-titulo');
+        const texto = document.getElementById('final-texto');
+        pFinal.style.display = 'block';
+
+        if(opcion === 'si') {
+            titulo.innerText = "Más allá del Sol";
+            texto.innerText = "Elegiste el 'Sí' porque nuestro amor tiene la fuerza de un cohete y la calma de las estrellas.";
+        } else if(opcion === 'no') {
+            titulo.innerText = "Siempre aquí";
+            texto.innerText = "Incluso en la duda, este espacio siempre estará abierto para ti. Te esperaré en mi infinito.";
+        } else {
+            titulo.innerText = "¡Atrapado!";
+            texto.innerText = "Hiciste clic en NO, pero el universo conspiró para que supieras que te amo de todos modos.";
+        }
     }
 </script>
 </body>
