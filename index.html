@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Infinity and Beyond</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+
+        :root {
+            --apple-green: #32d74b;
+            --apple-red: #ff453a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #000;
+            color: #fff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        /* Fondo de Estrellas */
+        #starField {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+        }
+
+        /* Panel de Acceso */
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 50px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .lives { font-size: 24px; margin-bottom: 20px; letter-spacing: 5px; }
+        h2 { font-weight: 300; margin-bottom: 30px; }
+        .riddle-container { margin-bottom: 20px; text-align: left; }
+        
+        input {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 18px;
+            color: white;
+            outline: none;
+            transition: 0.4s;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 20px;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 15px 50px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* CONTENIDO DESBLOQUEADO (RECUERDOS) */
+        #final-screen {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            padding: 40px 20px;
+            text-align: center;
+            opacity: 0;
+        }
+
+        .title-main {
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .memory-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 20px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        /* Elemento oculto para YouTube */
+        #youtube-player { display: none; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="starField"></div>
+
+<!-- 1. Contenedor del reproductor oculto -->
+<div id="youtube-player"></div>
+
+<!-- Pantalla de Inicio -->
+<div class="glass-panel" id="accessPanel">
+    <div class="lives" id="heartBox">❤️❤️❤️❤️❤️</div>
+    <h2>Space Mission</h2>
+    <div class="riddle-container">
+        <input type="text" id="q1" placeholder="...hijos">
+    </div>
+    <div class="riddle-container">
+        <input type="text" id="q2" placeholder="...aún se oyen voces de amor">
+    </div>
+    <div class="riddle-container">
+        <input type="text" id="q3" placeholder="Gritan a sol tu voz y mi voz">
+    </div>
+    <button onclick="checkAnswers()">Verify Identity</button>
+</div>
+
+<!-- Pantalla de Recuerdos -->
+<div id="final-screen">
+    <h1 class="title-main">To Infinity and Beyond</h1>
+    <p style="color: var(--apple-green); letter-spacing: 4px;">RECUERDOS DESBLOQUEADOS</p>
+
+    <div class="memory-grid">
+        <div class="memory-card" style="animation-delay: 0.2s;">
+            <h3>El Primer Momento</h3>
+            <p>Aquí puedes escribir sobre ese instante especial que nunca olvidarán. Un detalle único.</p>
+        </div>
+        <div class="memory-card" style="animation-delay: 0.4s;">
+            <h3>Nuestra Aventura</h3>
+            <p>Un viaje, una risa o ese día en la UNED donde todo cobró sentido.</p>
+        </div>
+        <div class="memory-card" style="animation-delay: 0.6s;">
+            <h3>La Promesa</h3>
+            <p>"Al infinito y más allá" no es solo una frase, es nuestro destino.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let lives = 5;
+    let player;
+
+    // 2. Carga la API de YouTube de forma asíncrona
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // 3. Configuración del reproductor con el ID de tu canción
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtube-player', {
+            height: '0',
+            width: '0',
+            videoId: 'WrjF8bZTCZI', 
+            playerVars: { 
+                'autoplay': 0, 
+                'loop': 1, 
+                'playlist': 'WrjF8bZTCZI' 
+            }
+        });
+    }
+
+    function checkAnswers() {
+        // 4. Activar la música al hacer clic en el botón
+        if (player && typeof player.playVideo === 'function') {
+            player.playVideo();
+        }
+
+        const a1 = document.getElementById('q1').value.toLowerCase().trim();
+        const a2 = document.getElementById('q2').value.toLowerCase().trim();
+        const a3 = document.getElementById('q3').value.toLowerCase().trim();
+
+        if (a1 === "saturno" && (a2 === "pluton" || a2 === "plutón") && (a3 === "la luna" || a3 === "luna")) {
+            unlockPage();
+        } else {
+            lives--;
+            document.getElementById('heartBox').innerHTML = "❤️".repeat(lives) + "🖤".repeat(5 - lives);
+            if (lives <= 0) { alert("Acceso denegado."); location.reload(); }
+        }
+    }
+
+    function unlockPage() {
+        const panel = document.getElementById('accessPanel');
+        const screen = document.getElementById('final-screen');
+        panel.style.transform = "scale(0.8) translateY(-50px)";
+        panel.style.opacity = "0";
+        setTimeout(() => {
+            panel.classList.add('hidden');
+            screen.style.display = "block";
+            document.body.style.overflowY = "auto";
+            setTimeout(() => screen.style.opacity = "1", 50);
+        }, 800);
+    }
+
+    // Estrellas de fondo
+    const starField = document.getElementById('starField');
+    for (let i = 0; i < 150; i++) {
+        const star = document.createElement('div');
+        star.style.cssText = `position:absolute; width:2px; height:2px; background:#fff; left:${Math.random()*100}%; top:${Math.random()*100}%; opacity:${Math.random()}; border-radius:50%;`;
+        starField.appendChild(star);
+    }
+</script>
+
+</body>
+</html>
