@@ -3,185 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Para Jocelyn: Al infinito y más allá</title>
+    <title>Para Jocelyn Domínguez López</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
 
         :root {
-            --pink-love: #ff2d55;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
+            --primary-love: #ff2d55;
+            --accent-blue: #5ac8fa;
+            --glass: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.15);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
+            height: 100%;
             background: #000;
             color: #fff;
-            font-family: 'Inter', -apple-system, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* Evita scroll mientras jugamos */
         }
 
+        /* Fondo dinámico */
         #starField {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #1a0a1a 0%, #000 100%);
+            inset: 0;
+            z-index: -2;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #000 100%);
         }
 
         #animationCanvas {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            inset: 0;
+            z-index: -1;
             pointer-events: none;
-            z-index: 0;
-            display: none;
         }
 
-        .glass-panel {
+        /* Contenedores */
+        .master-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 40px;
-            width: 85%;
-            max-width: 450px;
+            border-radius: 30px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 480px;
             text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
             z-index: 10;
-            transition: all 0.8s ease;
         }
 
-        .lives { font-size: 24px; margin-bottom: 20px; letter-spacing: 5px; }
+        /* Estilo de Inputs y Botones */
+        h2 { font-weight: 300; margin-bottom: 20px; font-size: 1.4rem; color: #efefef; }
+        .phrase-hint { color: var(--accent-blue); font-style: italic; margin-bottom: 10px; display: block; }
         
         input {
             width: 100%;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.1);
             border: 1px solid var(--border);
-            padding: 18px;
-            border-radius: 20px;
+            padding: 15px;
+            border-radius: 15px;
             color: white;
             outline: none;
-            box-sizing: border-box;
-            font-size: 18px;
+            font-size: 1.1rem;
             text-align: center;
+            margin-bottom: 20px;
         }
 
-        button {
-            margin-top: 25px;
+        .btn-main {
             background: #fff;
             color: #000;
             border: none;
-            padding: 18px 40px;
-            border-radius: 35px;
+            padding: 15px 30px;
+            border-radius: 50px;
             font-weight: 700;
             cursor: pointer;
             width: 100%;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
+        .btn-main:active { transform: scale(0.95); }
+
+        /* Pantalla de Propuesta */
         #final-screen {
             display: none;
-            width: 90%;
-            max-width: 800px;
-            text-align: center;
             opacity: 0;
-            z-index: 5;
-            padding: 20px;
+            width: 100%;
+            max-width: 800px;
         }
 
-        .title-main {
+        .romantic-title {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.5rem, 10vw, 4.5rem);
-            background: linear-gradient(180deg, #fff 0%, var(--pink-love) 100%);
+            font-size: clamp(3rem, 10vw, 5rem);
+            margin-bottom: 10px;
+            background: linear-gradient(to bottom, #fff, var(--primary-love));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(255,45,85,0.3));
         }
 
-        .proposal-card {
-            background: rgba(255, 45, 85, 0.1);
-            border: 1px solid rgba(255, 45, 85, 0.3);
-            border-radius: 30px;
-            padding: 30px;
-            margin: 20px auto;
-            backdrop-filter: blur(10px);
-        }
-
-        #poema-container {
+        .poema-box {
             display: none;
-            margin-top: 20px;
-            padding: 25px;
-            background: var(--glass);
-            border-radius: 25px;
-            border: 1px solid var(--pink-love);
-            animation: fadeInUp 1.5s ease;
             text-align: left;
-            line-height: 1.6;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            border-left: 3px solid var(--primary-love);
+            margin-top: 20px;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            animation: slideIn 1s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .btn-group {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
             margin-top: 30px;
-            min-height: 60px;
+            flex-wrap: wrap;
         }
 
-        #btn-si { background: var(--pink-love); color: white; transition: 0.3s; }
-        #btn-si:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--pink-love); }
-        #btn-no { background: #333; color: white; transition: 0.1s; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn-decision {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            min-width: 140px;
         }
 
-        .hidden { display: none !important; }
+        #btn-si { background: var(--primary-love); color: white; box-shadow: 0 10px 25px rgba(255,45,85,0.4); }
+        #btn-no { background: #222; color: #888; position: relative; }
+
+        /* Música */
+        #youtube-player { position: absolute; top: -500px; visibility: hidden; }
+
+        /* Responsividad */
+        @media (max-width: 480px) {
+            .glass-card { padding: 1.5rem; }
+            .romantic-title { font-size: 2.8rem; }
+        }
     </style>
 </head>
 <body>
 
-<div id="starField"></div>
-<canvas id="animationCanvas"></canvas>
-<div id="youtube-player" style="position: absolute; top: -100px;"></div>
+    <div id="starField"></div>
+    <canvas id="animationCanvas"></canvas>
+    <div id="youtube-player"></div>
 
-<div class="glass-panel" id="accessPanel">
-    <div class="lives" id="heartBox">❤️❤️❤️❤️❤️</div>
-    <h2 style="font-weight: 300;">Misión: Jocelyn Domínguez López</h2>
-    <p><i>"Al infinito..."</i></p>
-    <input type="text" id="passphrase" placeholder="Escribe aquí..." autocomplete="off">
-    <button onclick="checkIdentity()">Verificar</button>
-</div>
+    <div class="master-container">
+        <!-- ACCESO -->
+        <div class="glass-card" id="accessPanel">
+            <div id="heartBox" style="font-size: 1.5rem; margin-bottom: 15px;">❤️❤️❤️❤️❤️</div>
+            <h2>Hola, Jocelyn Domínguez López</h2>
+            <span class="phrase-hint">Completa la misión:</span>
+            <p style="margin-bottom: 15px;">"Al infinito..."</p>
+            <input type="text" id="passphrase" placeholder="Tu respuesta..." autocomplete="off">
+            <button class="btn-main" onclick="verificar()">Desbloquear Destino</button>
+        </div>
 
-<div id="final-screen">
-    <h1 class="title-main">Jocelyn...</h1>
-    
-    <div class="proposal-card" id="card-principal">
-        <h2 style="margin-top: 0;">¿Me dejarías volver a tu lado?</h2>
-        <div class="btn-group">
-            <button id="btn-si" onclick="aceptar()">SÍ</button>
-            <button id="btn-no" onmouseover="huir(this)" onclick="huir(this)">NO</button>
+        <!-- PROPUESTA -->
+        <div id="final-screen" class="glass-card">
+            <h1 class="romantic-title">Jocelyn...</h1>
+            <p id="propuesta-texto" style="font-size: 1.1rem; color: #ddd;">¿Me permites volver a ser el motivo de tus sonrisas?</p>
+            
+            <div class="btn-group" id="group-btns">
+                <button id="btn-si" class="btn-decision" onclick="aceptar()">SÍ</button>
+                <button id="btn-no" class="btn-decision" onmouseover="huir(this)" onclick="huir(this)">NO</button>
+            </div>
+
+            <div id="poema-container" class="poema-box">
+                <p>
+                    "Bella,<br>
+                    como en la piedra fresca del manantial, el agua<br>
+                    abre un ancho relámpago de espuma,<br>
+                    así es la sonrisa en tu rostro,<br>
+                    bella.<br><br>
+                    Pequeña,<br>
+                    delicada en mi mundo de gigantes,<br>
+                    yo te elijo a ti para caminar de nuevo,<br>
+                    al infinito y más allá, pero esta vez...<br>
+                    <b>sin soltarnos la mano nunca más.</b>"
+                </p>
+                <p style="margin-top:15px; color: var(--primary-love); font-weight: 700; text-align: center;">Te amo, Jocelyn Domínguez López.</p>
+            </div>
         </div>
     </div>
-
-    <div id="poema-container">
-        <h3 style="color: var(--pink-love); text-align: center; font-family: 'Dancing Script'; font-size: 2rem;">Hagamos un trato</h3>
-        <p style="font-style: italic;">
-            Compañera, usted sabe que puede contar conmigo,<br>
-            no hasta dos o hasta diez, sino contar conmigo...<br><br>
-            Si alguna vez advierte que la miro a los ojos,<br>
-            y una veta de amor reconoce en los míos,<br>
-            no alerte sus fusiles ni piense qué delirio;<br>
-            a pesar de la veta, o tal vez porque existe,<br>
-            usted puede contar conmigo.<br><br>
-            <b>Te amo, Jocelyn Domínguez López. Gracias por estar aquí.</b>
-        </p>
-    </div>
-</div>
 
 <script>
     let lives = 5;
@@ -189,7 +214,7 @@
     const canvas = document.getElementById('animationCanvas');
     const ctx = canvas.getContext('2d');
 
-    // YouTube API
+    // Cargar YouTube API para "Saturno"
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -202,83 +227,134 @@
         });
     }
 
-    function checkIdentity() {
+    function verificar() {
         const val = document.getElementById('passphrase').value.toLowerCase().trim();
         if (player && player.playVideo) player.playVideo();
 
         if (val === "y mas alla" || val === "y más allá") {
-            unlockPage();
+            desbloquear();
         } else {
             lives--;
             document.getElementById('heartBox').innerHTML = "❤️".repeat(lives) + "🖤".repeat(5 - lives);
-            if (lives <= 0) { alert("Acceso denegado."); location.reload(); }
+            if (lives <= 0) { alert("Acceso bloqueado."); location.reload(); }
         }
     }
 
-    function unlockPage() {
-        document.getElementById('accessPanel').style.opacity = "0";
+    function desbloquear() {
+        const panel = document.getElementById('accessPanel');
+        panel.style.transform = "translateY(-100vh) scale(0)";
+        panel.style.opacity = "0";
+        
         setTimeout(() => {
-            document.getElementById('accessPanel').classList.add('hidden');
+            panel.classList.add('hidden');
             const screen = document.getElementById('final-screen');
             screen.style.display = "block";
-            canvas.style.display = "block";
-            resizeCanvas();
-            startAnimations();
+            resize();
+            animate();
             setTimeout(() => screen.style.opacity = "1", 50);
-        }, 800);
-    }
-
-    function aceptar() {
-        document.getElementById('card-principal').style.display = 'none';
-        document.getElementById('poema-container').style.display = 'block';
-        alert("¡Has hecho a mi corazón el más feliz del infinito! ❤️");
+        }, 600);
     }
 
     function huir(btn) {
-        // Alerta de broma
-        alert("¿Tú creíste que te lo iba a poner fácil? 😉");
+        // Mensaje estilo poema/frase como pediste
+        const frases = [
+            "Tú sabes que no te lo iba a poner fácil...",
+            "Ese botón no funciona para ti hoy...",
+            "El destino dice que no puedes pulsar ahí.",
+            "¿En serio lo sigues intentando?"
+        ];
         
-        // Mover el botón a una posición aleatoria
+        // Solo mostramos el alert cada 3 intentos para no ser tan intrusivos pero sí románticos
+        if(Math.random() < 0.3) {
+            alert(frases[Math.floor(Math.random()*frases.length)]);
+        }
+
         const x = Math.random() * (window.innerWidth - btn.offsetWidth);
         const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+        
         btn.style.position = 'fixed';
+        btn.style.zIndex = '1000';
         btn.style.left = x + 'px';
         btn.style.top = y + 'px';
+        btn.style.transition = "all 0.2s ease";
     }
 
-    // --- CANVAS ROCKET ---
-    let rocket = { x: -100, y: 0, speed: 2 };
-    function resizeCanvas() {
+    function aceptar() {
+        document.getElementById('group-btns').style.display = 'none';
+        document.getElementById('propuesta-texto').innerHTML = "La mejor decisión de mi vida... ❤️";
+        document.getElementById('poema-container').style.display = 'block';
+        
+        // Efecto confeti simple
+        for(let i=0; i<50; i++) createParticle(window.innerWidth/2, window.innerHeight/2);
+    }
+
+    // --- ANIMACIONES MEJORADAS ---
+    let particles = [];
+    function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
 
-    function drawRocket() {
+    function createParticle(x, y) {
+        particles.push({
+            x, y,
+            size: Math.random() * 4 + 1,
+            speedX: Math.random() * 6 - 3,
+            speedY: Math.random() * 6 - 3,
+            color: Math.random() > 0.5 ? '#ff2d55' : '#fff'
+        });
+    }
+
+    function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
-        ctx.translate(rocket.x, canvas.height * 0.7);
-        ctx.fillStyle = '#ff453a'; // Punta
-        ctx.beginPath(); ctx.moveTo(30, 0); ctx.lineTo(15, -10); ctx.lineTo(15, 10); ctx.fill();
-        ctx.fillStyle = '#fff'; // Cuerpo
-        ctx.beginPath(); ctx.ellipse(0, 0, 20, 10, 0, 0, Math.PI*2); ctx.fill();
-        ctx.restore();
-        rocket.x += rocket.speed;
-        if (rocket.x > canvas.width + 100) rocket.x = -100;
-        requestAnimationFrame(drawRocket);
+        
+        // Cohete animado
+        const time = Date.now() * 0.001;
+        const rx = (time * 100) % (canvas.width + 200) - 100;
+        const ry = canvas.height * 0.8 + Math.sin(time * 2) * 20;
+
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.ellipse(rx, ry, 20, 8, 0.2, 0, Math.PI*2);
+        ctx.fill();
+        
+        // Estela del cohete
+        ctx.fillStyle = 'rgba(255, 45, 85, 0.5)';
+        ctx.beginPath();
+        ctx.arc(rx - 25, ry + 5, 5, 0, Math.PI*2);
+        ctx.fill();
+
+        particles.forEach((p, i) => {
+            p.x += p.speedX;
+            p.y += p.speedY;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+            ctx.fill();
+            if(p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) particles.splice(i, 1);
+        });
+
+        requestAnimationFrame(animate);
     }
 
-    function startAnimations() {
-        drawRocket();
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-
-    // Starfield Background
+    window.addEventListener('resize', resize);
+    
+    // Estrellas de fondo
     const starField = document.getElementById('starField');
-    for (let i = 0; i < 100; i++) {
-        const star = document.createElement('div');
-        star.style.cssText = `position:absolute; width:2px; height:2px; background:#fff; left:${Math.random()*100}%; top:${Math.random()*100}%; opacity:${Math.random()}; border-radius:50%;`;
-        starField.appendChild(star);
+    for (let i = 0; i < 150; i++) {
+        const s = document.createElement('div');
+        const size = Math.random() * 2 + 1;
+        s.style.cssText = `
+            position: absolute;
+            width: ${size}px; height: ${size}px;
+            background: white;
+            border-radius: 50%;
+            top: ${Math.random()*100}%;
+            left: ${Math.random()*100}%;
+            opacity: ${Math.random()};
+            box-shadow: 0 0 10px white;
+        `;
+        starField.appendChild(s);
     }
 </script>
 </body>
