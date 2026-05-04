@@ -8,23 +8,27 @@
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
 
         :root {
-            --primary-love: #ff2d55;
-            --accent-blue: #5ac8fa;
-            --glass: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.15);
+            --rosa-jocelyn: #ff2d75;
+            --morado-teisi: #a259ff;
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.2);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body, html {
-            height: 100%;
+            height: 100vh;
+            width: 100vw;
             background: #000;
             color: #fff;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; /* Evita scroll mientras jugamos */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Fondo dinámico */
+        /* Estrellas mejoradas */
         #starField {
             position: fixed;
             inset: 0;
@@ -32,41 +36,36 @@
             background: radial-gradient(circle at center, #1a0b2e 0%, #000 100%);
         }
 
-        #animationCanvas {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle var(--d) infinite;
         }
 
-        /* Contenedores */
-        .master-container {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
+        /* Contenedor Principal */
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 30px;
-            padding: 2.5rem;
-            width: 100%;
-            max-width: 480px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
             z-index: 10;
+            transition: all 0.8s ease;
+            position: relative;
         }
 
-        /* Estilo de Inputs y Botones */
-        h2 { font-weight: 300; margin-bottom: 20px; font-size: 1.4rem; color: #efefef; }
-        .phrase-hint { color: var(--accent-blue); font-style: italic; margin-bottom: 10px; display: block; }
+        h2 { font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; }
         
         input {
             width: 100%;
@@ -76,145 +75,154 @@
             border-radius: 15px;
             color: white;
             outline: none;
-            font-size: 1.1rem;
             text-align: center;
             margin-bottom: 20px;
+            font-size: 1rem;
         }
 
-        .btn-main {
-            background: #fff;
-            color: #000;
-            border: none;
+        button {
             padding: 15px 30px;
             border-radius: 50px;
+            border: none;
             font-weight: 700;
             cursor: pointer;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: 0.3s;
         }
 
-        .btn-main:active { transform: scale(0.95); }
+        #btn-verify { background: #fff; color: #000; width: 100%; }
 
-        /* Pantalla de Propuesta */
+        /* Pantalla Final Centrada */
         #final-screen {
             display: none;
             opacity: 0;
-            width: 100%;
-            max-width: 800px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .romantic-title {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(3rem, 10vw, 5rem);
-            margin-bottom: 10px;
-            background: linear-gradient(to bottom, #fff, var(--primary-love));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px rgba(255,45,85,0.3));
+            font-size: 3.5rem;
+            color: var(--rosa-jocelyn);
+            margin-bottom: 15px;
         }
 
+        /* POEMA CENTRADO */
         .poema-box {
             display: none;
-            text-align: left;
-            padding: 20px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            border-left: 3px solid var(--primary-love);
+            text-align: center; /* CENTRADO TOTAL */
+            width: 100%;
             margin-top: 20px;
-            line-height: 1.8;
+            line-height: 1.6;
             font-size: 0.95rem;
-            animation: slideIn 1s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+            animation: fadeIn 2s ease;
         }
 
         .btn-group {
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 30px;
-            flex-wrap: wrap;
+            margin-top: 20px;
         }
 
-        .btn-decision {
-            padding: 15px 40px;
-            border-radius: 50px;
+        #btn-si { background: var(--rosa-jocelyn); color: white; min-width: 120px; }
+        
+        /* Botón NO con movimiento suave */
+        #btn-no { 
+            background: #333; 
+            color: #fff; 
+            min-width: 120px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
+        /* Animación de Nombres Flotantes */
+        .floating-name {
+            position: fixed;
+            pointer-events: none;
             font-weight: 700;
-            cursor: pointer;
-            border: none;
-            min-width: 140px;
+            font-size: 1.2rem;
+            z-index: 100;
+            animation: floatUp 4s linear forwards;
         }
 
-        #btn-si { background: var(--primary-love); color: white; box-shadow: 0 10px 25px rgba(255,45,85,0.4); }
-        #btn-no { background: #222; color: #888; position: relative; }
-
-        /* Música */
-        #youtube-player { position: absolute; top: -500px; visibility: hidden; }
-
-        /* Responsividad */
-        @media (max-width: 480px) {
-            .glass-card { padding: 1.5rem; }
-            .romantic-title { font-size: 2.8rem; }
+        .phrase-pop {
+            position: fixed;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--rosa-jocelyn);
+            animation: fadeInOut 3s ease-in-out forwards;
+            z-index: 99;
         }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0; transform: scale(1); }
+        }
+
+        #youtube-player { display: none; }
     </style>
 </head>
 <body>
 
     <div id="starField"></div>
-    <canvas id="animationCanvas"></canvas>
     <div id="youtube-player"></div>
 
-    <div class="master-container">
-        <!-- ACCESO -->
-        <div class="glass-card" id="accessPanel">
-            <div id="heartBox" style="font-size: 1.5rem; margin-bottom: 15px;">❤️❤️❤️❤️❤️</div>
-            <h2>Hola, Jocelyn Domínguez López</h2>
-            <span class="phrase-hint">Completa la misión:</span>
-            <p style="margin-bottom: 15px;">"Al infinito..."</p>
-            <input type="text" id="passphrase" placeholder="Tu respuesta..." autocomplete="off">
-            <button class="btn-main" onclick="verificar()">Desbloquear Destino</button>
+    <!-- PANEL 1: ACCESO -->
+    <div class="glass-card" id="accessPanel">
+        <h2>Hola, Jocelyn Domínguez López</h2>
+        <p style="margin-bottom: 10px; font-style: italic;">"Al infinito..."</p>
+        <input type="text" id="passphrase" placeholder="Completa la frase" autocomplete="off">
+        <button id="btn-verify" onclick="verificar()">Verificar Destino</button>
+    </div>
+
+    <!-- PANEL 2: PROPUESTA Y POEMA -->
+    <div class="glass-card" id="final-screen">
+        <h1 class="romantic-title">Jocelyn</h1>
+        <p id="pregunta">¿Me dejas volver a tu lado?</p>
+        
+        <div class="btn-group" id="btns">
+            <button id="btn-si" onclick="aceptar()">SÍ</button>
+            <button id="btn-no" onmouseover="huir(this)">NO</button>
         </div>
 
-        <!-- PROPUESTA -->
-        <div id="final-screen" class="glass-card">
-            <h1 class="romantic-title">Jocelyn...</h1>
-            <p id="propuesta-texto" style="font-size: 1.1rem; color: #ddd;">¿Me permites volver a ser el motivo de tus sonrisas?</p>
-            
-            <div class="btn-group" id="group-btns">
-                <button id="btn-si" class="btn-decision" onclick="aceptar()">SÍ</button>
-                <button id="btn-no" class="btn-decision" onmouseover="huir(this)" onclick="huir(this)">NO</button>
-            </div>
-
-            <div id="poema-container" class="poema-box">
-                <p>
-                    "Bella,<br>
-                    como en la piedra fresca del manantial, el agua<br>
-                    abre un ancho relámpago de espuma,<br>
-                    así es la sonrisa en tu rostro,<br>
-                    bella.<br><br>
-                    Pequeña,<br>
-                    delicada en mi mundo de gigantes,<br>
-                    yo te elijo a ti para caminar de nuevo,<br>
-                    al infinito y más allá, pero esta vez...<br>
-                    <b>sin soltarnos la mano nunca más.</b>"
-                </p>
-                <p style="margin-top:15px; color: var(--primary-love); font-weight: 700; text-align: center;">Te amo, Jocelyn Domínguez López.</p>
-            </div>
+        <div id="poema-container" class="poema-box">
+            <p>
+                <b>Mi Jocelyn bella,</b><br><br>
+                "No te pido que seas el sol,<br>
+                sino que brilles a mi lado en la noche.<br>
+                Te elijo hoy, mañana y siempre,<br>
+                para que este 'infinito' sea nuestro hogar.<br>
+                Tú sabes que no te lo iba a poner fácil,<br>
+                porque lo que vale la pena se cuida con el alma."
+            </p>
         </div>
     </div>
 
 <script>
-    let lives = 5;
     let player;
-    const canvas = document.getElementById('animationCanvas');
-    const ctx = canvas.getContext('2d');
+    
+    // Crear Estrellas
+    const starField = document.getElementById('starField');
+    for (let i = 0; i < 150; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 3 + 'px';
+        star.style.width = size;
+        star.style.height = size;
+        star.style.top = Math.random() * 100 + '%';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.setProperty('--d', (Math.random() * 3 + 2) + 's');
+        starField.appendChild(star);
+    }
 
-    // Cargar YouTube API para "Saturno"
+    // YouTube API
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -231,130 +239,71 @@
         const val = document.getElementById('passphrase').value.toLowerCase().trim();
         if (player && player.playVideo) player.playVideo();
 
-        if (val === "y mas alla" || val === "y más allá") {
-            desbloquear();
+        if (val.includes("mas alla") || val.includes("más allá")) {
+            document.getElementById('accessPanel').style.display = 'none';
+            const fs = document.getElementById('final-screen');
+            fs.style.display = 'flex';
+            setTimeout(() => fs.style.opacity = '1', 50);
         } else {
-            lives--;
-            document.getElementById('heartBox').innerHTML = "❤️".repeat(lives) + "🖤".repeat(5 - lives);
-            if (lives <= 0) { alert("Acceso bloqueado."); location.reload(); }
+            alert("Esa no es nuestra clave... intenta de nuevo.");
         }
-    }
-
-    function desbloquear() {
-        const panel = document.getElementById('accessPanel');
-        panel.style.transform = "translateY(-100vh) scale(0)";
-        panel.style.opacity = "0";
-        
-        setTimeout(() => {
-            panel.classList.add('hidden');
-            const screen = document.getElementById('final-screen');
-            screen.style.display = "block";
-            resize();
-            animate();
-            setTimeout(() => screen.style.opacity = "1", 50);
-        }, 600);
     }
 
     function huir(btn) {
-        // Mensaje estilo poema/frase como pediste
-        const frases = [
-            "Tú sabes que no te lo iba a poner fácil...",
-            "Ese botón no funciona para ti hoy...",
-            "El destino dice que no puedes pulsar ahí.",
-            "¿En serio lo sigues intentando?"
-        ];
-        
-        // Solo mostramos el alert cada 3 intentos para no ser tan intrusivos pero sí románticos
-        if(Math.random() < 0.3) {
-            alert(frases[Math.floor(Math.random()*frases.length)]);
-        }
-
+        // Velocidad controlada (0.4s en el CSS) para que se sienta fluido pero difícil
         const x = Math.random() * (window.innerWidth - btn.offsetWidth);
         const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-        
         btn.style.position = 'fixed';
-        btn.style.zIndex = '1000';
         btn.style.left = x + 'px';
         btn.style.top = y + 'px';
-        btn.style.transition = "all 0.2s ease";
+        
+        // Frase opcional en consola o alert pequeño
+        if(Math.random() < 0.2) console.log("Tú sabes que no te lo iba a poner fácil... 😉");
     }
 
     function aceptar() {
-        document.getElementById('group-btns').style.display = 'none';
-        document.getElementById('propuesta-texto').innerHTML = "La mejor decisión de mi vida... ❤️";
+        document.getElementById('btns').style.display = 'none';
+        document.getElementById('pregunta').style.display = 'none';
         document.getElementById('poema-container').style.display = 'block';
         
-        // Efecto confeti simple
-        for(let i=0; i<50; i++) createParticle(window.innerWidth/2, window.innerHeight/2);
+        // Lanzar lluvia de nombres y frases
+        setInterval(crearNombres, 300);
+        setInterval(crearFrases, 1000);
     }
 
-    // --- ANIMACIONES MEJORADAS ---
-    let particles = [];
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    function crearNombres() {
+        const nombres = [
+            { txt: 'Jocelyn', col: 'var(--rosa-jocelyn)' },
+            { txt: 'Teisi', col: 'var(--morado-teisi)' }
+        ];
+        const n = nombres[Math.floor(Math.random() * nombres.length)];
+        const el = document.createElement('div');
+        el.className = 'floating-name';
+        el.innerText = n.txt;
+        el.style.color = n.col;
+        el.style.left = Math.random() * 90 + 'vw';
+        el.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
     }
 
-    function createParticle(x, y) {
-        particles.push({
-            x, y,
-            size: Math.random() * 4 + 1,
-            speedX: Math.random() * 6 - 3,
-            speedY: Math.random() * 6 - 3,
-            color: Math.random() > 0.5 ? '#ff2d55' : '#fff'
-        });
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Cohete animado
-        const time = Date.now() * 0.001;
-        const rx = (time * 100) % (canvas.width + 200) - 100;
-        const ry = canvas.height * 0.8 + Math.sin(time * 2) * 20;
-
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.ellipse(rx, ry, 20, 8, 0.2, 0, Math.PI*2);
-        ctx.fill();
-        
-        // Estela del cohete
-        ctx.fillStyle = 'rgba(255, 45, 85, 0.5)';
-        ctx.beginPath();
-        ctx.arc(rx - 25, ry + 5, 5, 0, Math.PI*2);
-        ctx.fill();
-
-        particles.forEach((p, i) => {
-            p.x += p.speedX;
-            p.y += p.speedY;
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-            ctx.fill();
-            if(p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) particles.splice(i, 1);
-        });
-
-        requestAnimationFrame(animate);
-    }
-
-    window.addEventListener('resize', resize);
-    
-    // Estrellas de fondo
-    const starField = document.getElementById('starField');
-    for (let i = 0; i < 150; i++) {
-        const s = document.createElement('div');
-        const size = Math.random() * 2 + 1;
-        s.style.cssText = `
-            position: absolute;
-            width: ${size}px; height: ${size}px;
-            background: white;
-            border-radius: 50%;
-            top: ${Math.random()*100}%;
-            left: ${Math.random()*100}%;
-            opacity: ${Math.random()};
-            box-shadow: 0 0 10px white;
-        `;
-        starField.appendChild(s);
+    function crearFrases() {
+        const frases = [
+            "Eres mi infinito",
+            "Siempre juntos",
+            "Te amo",
+            "Mi destino eres tú",
+            "Eres magia",
+            "Por fin..."
+        ];
+        const f = frases[Math.floor(Math.random() * frases.length)];
+        const el = document.createElement('div');
+        el.className = 'phrase-pop';
+        el.innerText = f;
+        el.style.top = Math.random() * 80 + 'vh';
+        el.style.left = Math.random() * 70 + 'vw';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
     }
 </script>
 </body>
